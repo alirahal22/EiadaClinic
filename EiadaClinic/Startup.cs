@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using EiadaClinic.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using EiadaClinic.Models;
 
 namespace EiadaClinic
 {
@@ -37,7 +38,7 @@ namespace EiadaClinic
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddIdentity<EiadaUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);

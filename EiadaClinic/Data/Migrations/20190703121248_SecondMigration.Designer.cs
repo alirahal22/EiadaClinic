@@ -4,14 +4,16 @@ using EiadaClinic.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EiadaClinic.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190703121248_SecondMigration")]
+    partial class SecondMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -158,13 +160,9 @@ namespace EiadaClinic.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("DoctorId");
-
                     b.Property<string>("UserId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DoctorId");
 
                     b.HasIndex("UserId");
 
@@ -176,8 +174,6 @@ namespace EiadaClinic.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AssistantId");
-
                     b.Property<string>("CloseTime");
 
                     b.Property<string>("OpenTime");
@@ -187,8 +183,6 @@ namespace EiadaClinic.Data.Migrations
                     b.Property<string>("UserId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AssistantId");
 
                     b.HasIndex("UserId");
 
@@ -483,10 +477,6 @@ namespace EiadaClinic.Data.Migrations
 
             modelBuilder.Entity("EiadaClinic.Models.Assistant", b =>
                 {
-                    b.HasOne("EiadaClinic.Models.Doctor", "Doctor")
-                        .WithMany()
-                        .HasForeignKey("DoctorId");
-
                     b.HasOne("EiadaClinic.Models.EiadaUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
@@ -494,10 +484,6 @@ namespace EiadaClinic.Data.Migrations
 
             modelBuilder.Entity("EiadaClinic.Models.Doctor", b =>
                 {
-                    b.HasOne("EiadaClinic.Models.Assistant", "Assistant")
-                        .WithMany()
-                        .HasForeignKey("AssistantId");
-
                     b.HasOne("EiadaClinic.Models.EiadaUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
