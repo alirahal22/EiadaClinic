@@ -14,8 +14,10 @@ namespace EiadaClinic.Models.BindingModels
         public string Email { get; set; }
         [Display(Name = "PhoneNumber")]
         public string PhoneNumber { get; set; }
-        [Display(Name = "Password")]
-        public string PasswordHash { get; set; }
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
         [Required]
         [Display(Name = "First Name")]
         public string FirstName { get; set; }

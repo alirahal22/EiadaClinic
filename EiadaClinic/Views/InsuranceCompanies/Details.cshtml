@@ -1,4 +1,4 @@
-﻿@model EiadaClinic.Models.Admin
+﻿@model Clinic.Models.InsuranceCompany
 
 @{
     ViewData["Title"] = "Details";
@@ -7,7 +7,7 @@
 <h2>Details</h2>
 
 <div>
-    <h4>Admin</h4>
+    <h4>InsuranceCompany</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -15,6 +15,18 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.User.Id)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Fax)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Fax)
         </dd>
     </dl>
 </div>

@@ -66,26 +66,14 @@ namespace EiadaClinic.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
-                var user = new EiadaUser { UserName = Input.UserName, Email = Input.UserName };
+                var user = new EiadaUser {
+                    UserName = Input.UserName,
+                    SecurityStamp = Guid.NewGuid().ToString()
+                };
                 var result = await _userManager.CreateAsync(user, Input.Password);
-                var role = await _roleManager.RoleExistsAsync("Doctor");
-                if(!role)
-                    await _roleManager.CreateAsync(new IdentityRole("Doctor"));
-                await _userManager.AddToRoleAsync(user, "Doctor");
                 if (result.Succeeded)
                 {
-                    //_logger.LogInformation("User created a new account with password.");
-
-                    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    //var callbackUrl = Url.Page(
-                    //    "/Account/ConfirmEmail",
-                    //    pageHandler: null,
-                    //    values: new { userId = user.Id, code = code },
-                    //    protocol: Request.Scheme);
-
-                    //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                    //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
+                    _logger.LogInformation("User created a new account with password.");
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return LocalRedirect(returnUrl);
                 }

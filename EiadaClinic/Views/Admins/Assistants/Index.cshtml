@@ -1,0 +1,35 @@
+﻿@model IEnumerable<EiadaClinic.Models.Assistant>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="CreateAssistant">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Doctor)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Doctor.Id)
+            </td>
+            <td>
+                <a asp-action="EditAssistant" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Assistant" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="DeleteAssistant" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
