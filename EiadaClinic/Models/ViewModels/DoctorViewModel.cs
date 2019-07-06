@@ -11,5 +11,6 @@ namespace Clinic.Models.ViewModels
 
         public Doctor Doctor { get; set; }
         public List<Patient> Patients { get; set; }
+        public List<Appointment> Appointments { get; set; }
     }
 }

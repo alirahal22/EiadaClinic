@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EiadaClinic.Models.BindingModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -8,12 +9,32 @@ namespace EiadaClinic.Models
 {
     public class Assistant
     {
-        public string Id { get; set; }
         [ForeignKey("User")]
-        public string UserId { get; set; }
+        public string Id { get; set; }
         public EiadaUser User { get; set; }
+
         [ForeignKey("Doctor")]
         public string DoctorId { get; set; }
         public Doctor Doctor { get; set; }
+
+        public AssistantCreationBindingModel ToAssistantCreationBindingModel()
+        {
+            return new AssistantCreationBindingModel()
+            {
+                Id = this.Id,
+                FirstName = User.FirstName,
+                MiddleName = User.MiddleName,
+                LastName = User.LastName,
+                UserName = User.UserName,
+                Email = User.Email,
+                Gender = User.Gender,
+                Address = User.Address,
+                Birthday = User.Birthday,
+                PhoneNumber = User.PhoneNumber,
+                DoctorId = this.DoctorId
+
+            };
+        }
+
     }
 }

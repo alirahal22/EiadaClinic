@@ -14,5 +14,13 @@ namespace EiadaClinic.Models.BindingModels
         public string OpenTime { get; set; }
         [Display(Name = "CloseTime")]
         public string CloseTime { get; set; }
+        [Display(Name = "Assistant")]
+        public string AssistantId { get; set; }
+
+
+        public DoctorCreationBindingModel()
+        {
+
+        }
     }
 }

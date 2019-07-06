@@ -1,4 +1,5 @@
 ﻿using Clinic.Models;
+using EiadaClinic.Models.BindingModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,9 +10,8 @@ namespace EiadaClinic.Models
 {
     public class Doctor: IEquatable<Doctor>
     {
-        public string Id { get; set; }
         [ForeignKey("User")]
-        public string UserId { get; set; }
+        public string Id { get; set; }
         public EiadaUser User { get; set; }
 
         public string Specialty { get; set; }
@@ -41,5 +41,26 @@ namespace EiadaClinic.Models
         {
             return HashCode.Combine(Specialty, OpenTime, CloseTime);
         }
+
+        public DoctorCreationBindingModel ToDoctorCreationBindingModel()
+        {
+            return new DoctorCreationBindingModel()
+            {
+                Id = this.Id,
+                FirstName = User.FirstName,
+                MiddleName = User.MiddleName,
+                LastName = User.LastName,
+                UserName = User.UserName,
+                Email = User.Email,
+                Gender = User.Gender,
+                Address = User.Address,
+                Birthday = User.Birthday,
+                PhoneNumber = User.PhoneNumber,
+                Specialty = this.Specialty,
+                OpenTime = this.OpenTime,
+                CloseTime = this.CloseTime
+            };
+        }
+        
     }
 }

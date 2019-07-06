@@ -1,4 +1,5 @@
 ﻿using EiadaClinic.Models;
+using EiadaClinic.Models.BindingModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,9 +11,8 @@ namespace Clinic.Models
 {
     public class InsuranceCompany
     {
-        public string Id { get; set; }
         [ForeignKey("User")]
-        public string UserId { get; set; }
+        public string Id { get; set; }
         public EiadaUser User { get; set; }
 
 
@@ -20,6 +20,20 @@ namespace Clinic.Models
         public string Fax { get; set; }
 
         public virtual ICollection<Patient> Patients { get; set; }
-        
+
+
+        public InsuranceCompanyCreationBindingModel ToInsuranceCompanyCreationBindingModel()
+        {
+            return new InsuranceCompanyCreationBindingModel()
+            {
+                Id = this.Id,
+                UserName = User.UserName,
+                Email = User.Email,
+                PhoneNumber = User.PhoneNumber,
+                Address = User.Address,
+                Name = this.Name,
+                Fax = this.Fax,
+            };
+        }
     }
 }

@@ -16,16 +16,13 @@
                 @Html.DisplayNameFor(model => model.User.UserName)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.User.Gender)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Specialty)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.OpenTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CloseTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Assistant)
+                @Html.DisplayNameFor(model => model.Assistant.User.UserName)
             </th>
             <th></th>
         </tr>
@@ -37,13 +34,10 @@
                 @Html.DisplayFor(modelItem => item.User.UserName)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.User.Gender)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Specialty)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OpenTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CloseTime)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Assistant.User.UserName)

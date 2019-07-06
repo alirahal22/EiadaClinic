@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace EiadaClinic.Data.Migrations
+namespace EiadaClinic.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -15,7 +15,7 @@ namespace EiadaClinic.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.8-servicing-32085")
+                .HasAnnotation("ProductVersion", "2.1.1-rtm-30846")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -79,18 +79,13 @@ namespace EiadaClinic.Data.Migrations
 
             modelBuilder.Entity("Clinic.Models.InsuranceCompany", b =>
                 {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id");
 
                     b.Property<string>("Fax");
 
                     b.Property<string>("Name");
 
-                    b.Property<string>("UserId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("InsuranceCompanies");
                 });
@@ -120,8 +115,6 @@ namespace EiadaClinic.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AdminId");
-
                     b.Property<string>("Content");
 
                     b.Property<DateTime>("Date");
@@ -134,47 +127,25 @@ namespace EiadaClinic.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AdminId");
-
                     b.ToTable("Reminders");
-                });
-
-            modelBuilder.Entity("EiadaClinic.Models.Admin", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Admins");
                 });
 
             modelBuilder.Entity("EiadaClinic.Models.Assistant", b =>
                 {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id");
 
                     b.Property<string>("DoctorId");
-
-                    b.Property<string>("UserId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DoctorId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Assistants");
                 });
 
             modelBuilder.Entity("EiadaClinic.Models.Doctor", b =>
                 {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id");
 
                     b.Property<string>("AssistantId");
 
@@ -184,13 +155,9 @@ namespace EiadaClinic.Data.Migrations
 
                     b.Property<string>("Specialty");
 
-                    b.Property<string>("UserId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AssistantId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Doctors");
                 });
@@ -200,15 +167,11 @@ namespace EiadaClinic.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AdminId");
-
                     b.Property<string>("content");
 
                     b.Property<string>("senderId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AdminId");
 
                     b.HasIndex("senderId");
 
@@ -217,18 +180,15 @@ namespace EiadaClinic.Data.Migrations
 
             modelBuilder.Entity("EiadaClinic.Models.Patient", b =>
                 {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Id");
+
+                    b.Property<string>("BloodType");
 
                     b.Property<string>("InsuranceCompanyId");
-
-                    b.Property<string>("UserId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("InsuranceCompanyId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Patients");
                 });
@@ -305,7 +265,7 @@ namespace EiadaClinic.Data.Migrations
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256);
 
-                    b.Property<string>("Password");
+                    b.Property<string>("PasswordHash");
 
                     b.Property<string>("PhoneNumber");
 
@@ -355,11 +315,9 @@ namespace EiadaClinic.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.Property<string>("LoginProvider")
-                        .HasMaxLength(128);
+                    b.Property<string>("LoginProvider");
 
-                    b.Property<string>("ProviderKey")
-                        .HasMaxLength(128);
+                    b.Property<string>("ProviderKey");
 
                     b.Property<string>("ProviderDisplayName");
 
@@ -390,11 +348,9 @@ namespace EiadaClinic.Data.Migrations
                 {
                     b.Property<string>("UserId");
 
-                    b.Property<string>("LoginProvider")
-                        .HasMaxLength(128);
+                    b.Property<string>("LoginProvider");
 
-                    b.Property<string>("Name")
-                        .HasMaxLength(128);
+                    b.Property<string>("Name");
 
                     b.Property<string>("Value");
 
@@ -434,7 +390,7 @@ namespace EiadaClinic.Data.Migrations
                         .HasForeignKey("DoctorId");
 
                     b.HasOne("EiadaClinic.Models.Patient", "Patient")
-                        .WithMany()
+                        .WithMany("Appointments")
                         .HasForeignKey("PatientId");
                 });
 
@@ -445,7 +401,7 @@ namespace EiadaClinic.Data.Migrations
                         .HasForeignKey("DoctorId");
 
                     b.HasOne("EiadaClinic.Models.Patient", "Patient")
-                        .WithMany()
+                        .WithMany("Consultations")
                         .HasForeignKey("PatientId");
                 });
 
@@ -453,7 +409,8 @@ namespace EiadaClinic.Data.Migrations
                 {
                     b.HasOne("EiadaClinic.Models.EiadaUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Clinic.Models.PatientDoctor", b =>
@@ -463,22 +420,8 @@ namespace EiadaClinic.Data.Migrations
                         .HasForeignKey("DoctorId");
 
                     b.HasOne("EiadaClinic.Models.Patient", "Patient")
-                        .WithMany()
+                        .WithMany("PatientDoctors")
                         .HasForeignKey("PatientId");
-                });
-
-            modelBuilder.Entity("Clinic.Models.Reminder", b =>
-                {
-                    b.HasOne("EiadaClinic.Models.Admin")
-                        .WithMany("Reminders")
-                        .HasForeignKey("AdminId");
-                });
-
-            modelBuilder.Entity("EiadaClinic.Models.Admin", b =>
-                {
-                    b.HasOne("EiadaClinic.Models.EiadaUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("EiadaClinic.Models.Assistant", b =>
@@ -489,7 +432,8 @@ namespace EiadaClinic.Data.Migrations
 
                     b.HasOne("EiadaClinic.Models.EiadaUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("EiadaClinic.Models.Doctor", b =>
@@ -500,15 +444,12 @@ namespace EiadaClinic.Data.Migrations
 
                     b.HasOne("EiadaClinic.Models.EiadaUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("EiadaClinic.Models.Message", b =>
                 {
-                    b.HasOne("EiadaClinic.Models.Admin")
-                        .WithMany("Messages")
-                        .HasForeignKey("AdminId");
-
                     b.HasOne("EiadaClinic.Models.EiadaUser", "sender")
                         .WithMany()
                         .HasForeignKey("senderId");
@@ -516,13 +457,14 @@ namespace EiadaClinic.Data.Migrations
 
             modelBuilder.Entity("EiadaClinic.Models.Patient", b =>
                 {
-                    b.HasOne("Clinic.Models.InsuranceCompany")
-                        .WithMany("Patients")
-                        .HasForeignKey("InsuranceCompanyId");
-
                     b.HasOne("EiadaClinic.Models.EiadaUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Clinic.Models.InsuranceCompany", "InsuranceCompany")
+                        .WithMany("Patients")
+                        .HasForeignKey("InsuranceCompanyId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

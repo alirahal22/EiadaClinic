@@ -2,43 +2,83 @@
 @{
     ViewData["Title"] = "Index";
 }
+<head>
 
-<h2>Login</h2>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--===============================================================================================-->
+    <link rel="icon" type="image/png" href="images/icons/favicon.ico" />
+    <!--===============================================================================================-->
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="css/util.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <!--===============================================================================================-->
+</head>
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="LoginAsync" method="post">
-            <h4>Create a new account.</h4>
-            <hr />
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="UserName"></label>
-                <input asp-for="UserName" class="form-control" />
-                <span asp-validation-for="UserName" class="text-danger"></span>
+
+<div class="limiter">
+    <div class="container-login100">
+        <div class="wrap-login100">
+            <div class="login100-form-title" style="background-image: url(images/download.jpg);">
+                <span class="login100-form-title-1">
+                    Sign In
+                </span>
             </div>
-            <div class="form-group">
-                <label asp-for="Password"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <label asp-for="RememberMe">
-                        <input asp-for="RememberMe" />
-                        @Html.DisplayNameFor(m => m.RememberMe)
-                    </label>
+            <form class="login100-form validate-form" asp-action="LoginAsync" method="post">
+
+                <div class="wrap-input100 m-b-26">
+                    @*<div asp-validation-summary="All" class="text-danger"></div>*@
+                    <span asp-for="UserName" class="label-input100">Username</span>
+                    <input asp-for="UserName" class="input100 form-control" type="text" name="username" placeholder="Enter username">
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                    <span class="focus-input100"></span>
                 </div>
-            </div>
-            <button type="Login" class="btn btn-default">Login</button>
-        </form>
+                <div class="wrap-input100  m-b-18">
+                    <span asp-for="Password" class="label-input100">Password</span>
+                    <input asp-for="Password" class="input100 form-control" type="password" name="password" placeholder="Enter password">
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                    <span class="focus-input100"></span>
+                </div>
+                <div class="flex-sb-m w-full p-b-30">
+                    <div class="contact100-form-checkbox">
+                        <input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
+                        <label asp-for="RememberMe" class="label-checkbox100" for="ckb1">
 
-        @if (String.IsNullOrEmpty(ViewBag.Message)) {
-            <div class="alert alert-danger" role="alert">
-                <a href="#" class="alert-link">
-                    @ViewBag.Message
-                </a>
-            </div>
-        }
+                            <input asp-for="RememberMe" />
+                            @Html.DisplayNameFor(m => m.RememberMe)
+                        </label>
+                    </div>
+                    <div>
+                        <a href="#" class="txt1">
+                            Forgot Password?
+                        </a>
+                    </div>
+
+                    <div>
+                        <a href="#" class="txt1">
+                            Forgot Password?
+                        </a>
+                    </div>
+                </div>
+
+                <button type="Login" class="btn btn-default">Login</button>
+            </form>
+        </div>
     </div>
 </div>
+<script src="~/js/vendor/jquery/jquery-3.2.1.min.js"></script>
+<!--===============================================================================================-->
+<script src="~/js/vendor/animsition/js/animsition.min.js"></script>
+<!--===============================================================================================-->
+<script src="~/js/vendor/bootstrap/js/popper.js"></script>
+<script src="~/js/vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+<script src="~/js/vendor/select2/select2.min.js"></script>
+<!--===============================================================================================-->
+<script src="~/js/vendor/daterangepicker/moment.min.js"></script>
+<script src="~/js/vendor/daterangepicker/daterangepicker.js"></script>
+<!--===============================================================================================-->
+<script src="~/js/vendor/countdowntime/countdowntime.js"></script>
+<!--===============================================================================================-->
+<script src="~/js/main.js"></script>
 

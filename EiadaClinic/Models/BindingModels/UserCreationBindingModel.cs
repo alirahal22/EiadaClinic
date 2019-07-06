@@ -8,31 +8,38 @@ namespace EiadaClinic.Models.BindingModels
 {
     public class UserCreationBindingModel
     {
+
+
+        public string Id { get; set; }
+        [Required]
         [Display(Name = "UserName")]
         public string UserName { get; set; }
         [Display(Name = "Email")]
-        public string Email { get; set; }
+        public virtual string Email { get; set; }
         [Display(Name = "PhoneNumber")]
-        public string PhoneNumber { get; set; }
+        public virtual string PhoneNumber { get; set; }
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        public string Password { get; set; }
-        [Required]
+        public virtual string Password { get; set; }
         [Display(Name = "First Name")]
-        public string FirstName { get; set; }
-        [Required]
+        public virtual string FirstName { get; set; }
         [Display(Name = "Middle Name")]
-        public string MiddleName { get; set; }
-        [Required]
+        public virtual string MiddleName { get; set; }
         [Display(Name = "Last Name")]
-        public string LastName { get; set; }
+        public virtual string LastName { get; set; }
         [Display(Name = "Gender")]
-        public string Gender { get; set; }
+        public virtual string Gender { get; set; }
         [Display(Name = "Address")]
-        public string Address { get; set; }
+        public virtual string Address { get; set; }
         [DataType(DataType.Date)]
         [Display(Name = "Birthday")]
-        public DateTime Birthday { get; set; }
+        public virtual DateTime Birthday { get; set; }
+
+
+        public UserCreationBindingModel()
+        {
+
+        }
     }
 }

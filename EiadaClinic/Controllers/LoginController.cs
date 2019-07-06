@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using EiadaClinic.Data;
 using EiadaClinic.Models;
 using EiadaClinic.Models.BindingModels;
+using EiadaClinic.Models.Singleton;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,19 +13,22 @@ namespace EiadaClinic.Controllers
 {
     public class LoginController : Controller
     {
-        
+        private ActiveUser _activeUser;
         private readonly SignInManager<EiadaUser> _signInManager;
         private readonly UserManager<EiadaUser> _userManager;
+        
 
         [BindProperty]
         public LoginBindingModel Input { get; set; }
 
 
-        public LoginController(SignInManager<EiadaUser> signInManager, UserManager<EiadaUser> userManager)
+        public LoginController(SignInManager<EiadaUser> signInManager, UserManager<EiadaUser> userManager, ActiveUser activeUser)
         {
-            
+
+            _activeUser = activeUser;
             _userManager = userManager;
             _signInManager = signInManager;
+            
         }
 
 
@@ -51,8 +55,12 @@ namespace EiadaClinic.Controllers
             var result = await _signInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
             if (result.Succeeded)
             {
+                
                 var user = await _userManager.FindByNameAsync(Input.UserName);
                 var roles = await _userManager.GetRolesAsync(user);
+
+                _activeUser.UserName = Input.UserName;
+                _activeUser.Id = user.Id;
                 return Redirect("~/" + roles[0] + "s");
             }
             else

@@ -13,6 +13,7 @@ using EiadaClinic.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using EiadaClinic.Models;
+using EiadaClinic.Models.Singleton;
 
 namespace EiadaClinic
 {
@@ -35,6 +36,7 @@ namespace EiadaClinic
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddSingleton(typeof(ActiveUser));
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));

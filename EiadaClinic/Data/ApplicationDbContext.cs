@@ -12,7 +12,6 @@ namespace EiadaClinic.Data
     {
         public DbSet<Reminder> Reminders { get; set; }
         public DbSet<Message> Messages { get; set; }
-        public DbSet<Admin> Admins { get; set; }
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Doctor> Doctors { get; set; }
         public DbSet<Assistant> Assistants { get; set; }
