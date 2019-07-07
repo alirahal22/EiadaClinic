@@ -74,8 +74,6 @@ namespace EiadaClinic.Controllers
         
         public IActionResult CreateDoctor()
         {
-            ViewData["AssistantId"] = new SelectList(_context.Assistants, "Id", "Id");
-            ViewData["UserId"] = new SelectList(_context.Set<EiadaUser>(), "Id", "Id");
             return View("./Doctors/Create");
         }
         

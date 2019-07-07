@@ -13,6 +13,7 @@ namespace Clinic.Models
         
         public int Id { get; set; }
         [Display(Name = "Consultation Title")]
+        [Required]
         public string Title { get; set; }
         [Display(Name = "Type")]
         public string Type { get; set; }

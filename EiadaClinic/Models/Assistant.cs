@@ -1,4 +1,5 @@
 ﻿using EiadaClinic.Models.BindingModels;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -24,6 +25,7 @@ namespace EiadaClinic.Models
                 Id = this.Id,
                 FirstName = User.FirstName,
                 MiddleName = User.MiddleName,
+
                 LastName = User.LastName,
                 UserName = User.UserName,
                 Email = User.Email,

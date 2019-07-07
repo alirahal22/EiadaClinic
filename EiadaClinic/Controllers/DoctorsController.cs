@@ -14,6 +14,7 @@ using EiadaClinic.Models.Singleton;
 using Clinic.Models.ViewModels;
 using Clinic.Models;
 
+
 namespace EiadaClinic.Controllers
 {
     
@@ -34,7 +35,7 @@ namespace EiadaClinic.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var user = _userManager.FindByNameAsync(_activeUser.UserName);
+           // var user = _userManager.FindByNameAsync(_activeUser.UserName);
 
 
             List<Patient> patients = await _context.PatientDoctors
@@ -42,11 +43,16 @@ namespace EiadaClinic.Controllers
                 .Select(pd => pd.Patient)
                 .Include(pd => pd.User)
                 .ToListAsync();
+            return View(patients);
+        }
 
+        public async Task<IActionResult> Appointments()
+        {
             List<Appointment> appointments = await _context.Appointments
                 .Where(a => a.Doctor.User.UserName.Equals(_activeUser.UserName))
                 .ToListAsync();
-            return View(new DoctorViewModel() { Doctor = new Doctor(), Patients = patients, Appointments = appointments });
+            return View(appointments);
+
         }
 
         public async Task<IActionResult> Patient(string id)
@@ -58,6 +64,7 @@ namespace EiadaClinic.Controllers
 
             var patient = await _context.Patients
                 .Include(p => p.User)
+                .Include(p => p.Consultations)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (patient == null)
             {
@@ -119,7 +126,6 @@ namespace EiadaClinic.Controllers
                 
                 return RedirectToAction("Create", patientCreationBindingModel);
             }
-            ViewData["UserId"] = new SelectList(_context.Set<EiadaUser>(), "Id", "Id", patient.Id);
             return View("Create", patient);
         }
         
@@ -136,7 +142,6 @@ namespace EiadaClinic.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.Set<EiadaUser>(), "Id", "Id", patient.Id);
             return View(patient);
         }
 
@@ -173,7 +178,6 @@ namespace EiadaClinic.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Set<EiadaUser>(), "Id", "Id", patient.Id);
             return View(patientCreationBindingModel);
         }
 
@@ -210,6 +214,17 @@ namespace EiadaClinic.Controllers
         private bool PatientExists(string id)
         {
             return _context.Patients.Any(e => e.Id == id);
+        }
+
+
+        public async Task<IActionResult> DeleteConsultation(string consultationId, string patientId)
+        {
+            var consultation = await _context.Consultations.FindAsync(consultationId);
+            _context.Consultations.Remove(consultation);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Patient", patientId);
+
+
         }
 
 
