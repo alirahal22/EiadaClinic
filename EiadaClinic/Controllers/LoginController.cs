@@ -61,6 +61,7 @@ namespace EiadaClinic.Controllers
 
                 _activeUser.UserName = Input.UserName;
                 _activeUser.Id = user.Id;
+                _activeUser.Role = roles[0] + "s";
                 return Redirect("~/" + roles[0] + "s");
             }
             else

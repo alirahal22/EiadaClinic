@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Clinic.Models
+namespace EiadaClinic.Models
 {
     public class InsuranceCompany
     {

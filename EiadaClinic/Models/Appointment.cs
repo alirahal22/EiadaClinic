@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Clinic.Models
+namespace EiadaClinic.Models
 {
     public class Appointment
     {

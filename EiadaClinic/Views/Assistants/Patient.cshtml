@@ -1,0 +1,101 @@
+﻿@model EiadaClinic.Models.Patient
+
+@{
+    ViewData["Title"] = "Patient Details";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title">Patient Details</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="EditPatient" method="get">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label asp-for="User.UserName" class="bmd-label-floating"></label>
+                                <input asp-for="User.UserName" class="form-control" disabled>
+                                <span asp-validation-for="User.UserName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label asp-for="BloodType" class="bmd-label-floating"></label>
+                                <input asp-for="BloodType" type="password" class="form-control" disabled>
+                                <span asp-validation-for="BloodType" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="User.FirstName" class="bmd-label-floating"></label>
+                                <input asp-for="User.FirstName" class="form-control" disabled>
+                                <span asp-validation-for="User.FirstName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="User.MiddleName" class="bmd-label-floating"></label>
+                                <input asp-for="User.MiddleName" class="form-control" disabled>
+                                <span asp-validation-for="User.MiddleName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="User.LastName" class="bmd-label-floating"></label>
+                                <input asp-for="User.LastName" class="form-control" disabled>
+                                <span asp-validation-for="User.LastName" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="User.PhoneNumber" class="bmd-label-floating"></label>
+                                <input asp-for="User.PhoneNumber" class="form-control" disabled>
+                                <span asp-validation-for="User.PhoneNumber" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="User.Gender" class="bmd-label-floating"></label>
+                                <input asp-for="User.Gender" class="form-control" disabled>
+                                <span asp-validation-for="User.Gender" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="User.Birthday" class="bmd-label-floating"></label>
+                                <input asp-for="User.Birthday" class="form-control" disabled>
+                                <span asp-validation-for="User.Birthday" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="User.Email" class="bmd-label-floating"></label>
+                                <input asp-for="User.Email" class="form-control" disabled>
+                                <span asp-validation-for="User.Email" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="User.Address" class="bmd-label-floating"></label>
+                                <input asp-for="User.Address" class="form-control" disabled>
+                                <span asp-validation-for="User.Address" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <button asp-action="EditPatient" asp-route-id="@Model.Id" class="btn col-md-2 btn-primary pull-right">Edit</button>
+                    <div class="clearfix"></div>
+                </form>
+            </div>
+        </div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+</div>

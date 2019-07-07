@@ -1,53 +1,60 @@
-﻿@model IEnumerable<Clinic.Models.InsuranceCompany>
+﻿@model IEnumerable<EiadaClinic.Models.InsuranceCompany>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Insurance Companies";
 }
 
-<h2>Index</h2>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title ">Insurance Companies</h4>
+                <p class="card-category"> <a asp-action="CreateCompany">Create new company</a> </p>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class=" text-primary">
+                        <th>
+                            @Html.DisplayNameFor(model => model.User.UserName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Name)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.User.Address)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Fax)
+                        </th>
+                        <th></th>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.User.UserName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.User.Address)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Fax)
+                                </td>
+                                <td class="col-md-12 pull-right">
+                                    <a asp-action="InsuranceCompany" asp-route-id="@item.Id">Details</a>
+                                </td>
+                            </tr>
+                            }
 
-<p>
-    <a asp-action="CreateCompany">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.User.UserName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User.Address)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Fax)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Fax)
-            </td>
-            <td>
-                <a asp-action="EditCompany" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="DeleteCompany" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

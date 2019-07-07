@@ -11,8 +11,7 @@ using EiadaClinic.Models.BindingModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using EiadaClinic.Models.Singleton;
-using Clinic.Models.ViewModels;
-using Clinic.Models;
+using EiadaClinic.Models.ViewModels;
 
 namespace EiadaClinic.Controllers
 {
@@ -66,152 +65,41 @@ namespace EiadaClinic.Controllers
             return View(patient);
         }
 
-        //Create Patient
-        public IActionResult Create()
+        public IActionResult CreateConsultation(string id) //id of patient
         {
-            ViewData["UserId"] = new SelectList(_context.Set<EiadaUser>(), "Id", "Id");
-            return View("Create");
+            ViewData["PatientId"] = id;
+            return View();
         }
 
-        //Create Patient
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(PatientCreationBindingModel patientCreationBindingModel)
+        public async Task<IActionResult> CreateConsultation(Consultation consultation, string PatientId)
         {
-            //Create 'Patient' Role if it doesn't exist
-            string RoleString = "Patient";
-            var role = await _roleManager.RoleExistsAsync(RoleString);
-            if (!role)
-                await _roleManager.CreateAsync(new IdentityRole(RoleString));
+            consultation.Patient = await _context.Patients.Where(p => p.Id.Equals(PatientId)).SingleAsync();
+            consultation.Doctor = await _context.Doctors.Where(d => d.Id.Equals(_activeUser.Id)).SingleAsync();
 
-            Patient patient = null;
-            //Validate Model
-            if (ModelState.IsValid)
-            {
-                var user = CreateUser(patientCreationBindingModel);
-                //create user and assign role if successful
-                var result = await _userManager.CreateAsync(user, patientCreationBindingModel.Password);
-                if (result.Succeeded)
-                {
-                    //Fill role related attributes
-                    patient = new Patient()
-                    {
-                        BloodType = patientCreationBindingModel.BloodType,
-                        User = user
-                    };
-                    _context.Add(patient);
-                    _context.SaveChanges();
-
-
-                    //var activeUser = _userManager.FindByNameAsync(_activeUser.UserName);
-                    Doctor doctor = _context.Doctors.Where(d => d.Id.Equals(_activeUser.Id)).Single();
-                    PatientDoctor pd = new PatientDoctor() { Patient = patient, Doctor = doctor };
-                    _context.Add(pd);
-                    await _context.SaveChangesAsync();
-                    await _userManager.AddToRoleAsync(user, RoleString);
-                }
-
-                if (result.Succeeded)
-                {
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction("Index");
-                }
-                
-                return RedirectToAction("Create", patientCreationBindingModel);
-            }
-            ViewData["UserId"] = new SelectList(_context.Set<EiadaUser>(), "Id", "Id", patient.Id);
-            return View("Create", patient);
-        }
-        
-        // GET: Patients/Edit/5
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var patient = await _context.Patients.FindAsync(id);
-            if (patient == null)
-            {
-                return NotFound();
-            }
-            ViewData["UserId"] = new SelectList(_context.Set<EiadaUser>(), "Id", "Id", patient.Id);
-            return View(patient);
-        }
-
-        // POST: Patients/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, PatientCreationBindingModel patientCreationBindingModel)
-        {
-            if (id != patientCreationBindingModel.Id)
-            {
-                return NotFound();
-            }
-            Patient patient = null;
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    EiadaUser user = CreateUser(patientCreationBindingModel);
-                    user.Id = patientCreationBindingModel.Id;
-                    patient = new Patient() { Id = patientCreationBindingModel.Id, BloodType = patientCreationBindingModel.BloodType };
-                    _context.Update(patient);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PatientExists(patient.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["UserId"] = new SelectList(_context.Set<EiadaUser>(), "Id", "Id", patient.Id);
-            return View(patientCreationBindingModel);
-        }
-
-        // GET: Patients/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var patient = await _context.Patients
-                .Include(p => p.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (patient == null)
-            {
-                return NotFound();
-            }
-
-            return View(patient);
-        }
-
-        // POST: Patients/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            var patient = await _context.Patients.FindAsync(id);
-            _context.Patients.Remove(patient);
+            _context.Add(consultation);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return View();
         }
 
-        private bool PatientExists(string id)
+        public async Task<IActionResult> EditConsultation(string id)
         {
-            return _context.Patients.Any(e => e.Id == id);
+            return View( await _context.Consultations
+                .Where(c => c.Id.Equals(id))
+                .SingleAsync());
         }
 
+        [HttpPost]
+        public async Task<IActionResult> EditConsultation(Consultation consultation)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Update(consultation);
+                await _context.SaveChangesAsync();
+                return View();
+            }
+            return View(consultation);  
+        }
 
         private EiadaUser CreateUser(UserCreationBindingModel userCreationBindingModel)
         {

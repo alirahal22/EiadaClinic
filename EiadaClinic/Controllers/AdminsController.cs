@@ -10,11 +10,10 @@ using EiadaClinic.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using EiadaClinic.Models.BindingModels;
-using Clinic.Models;
 
 namespace EiadaClinic.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Doc")]
     public class AdminsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -28,6 +27,10 @@ namespace EiadaClinic.Controllers
             _roleManager = roleManager;
         }
         
+        public async Task<IActionResult> Index()
+        {
+            return await Doctors();
+        }
 
         //////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////
@@ -49,12 +52,14 @@ namespace EiadaClinic.Controllers
         
         public async Task<IActionResult> Doctors()
         {
+            ViewBag.Action = "Doctors";
             var applicationDbContext = _context.Doctors.Include(d => d.Assistant).Include(d => d.User);
             return View("./Doctors/Index", await applicationDbContext.ToListAsync());
         }
         
         public async Task<IActionResult> Doctor(string id)
         {
+            ViewBag.Action = "Doctors";
             if (id == null)
             {
                 return NotFound();
@@ -74,8 +79,8 @@ namespace EiadaClinic.Controllers
         
         public IActionResult CreateDoctor()
         {
-            ViewData["AssistantId"] = new SelectList(_context.Assistants, "Id", "Id");
-            ViewData["UserId"] = new SelectList(_context.Set<EiadaUser>(), "Id", "Id");
+            ViewBag.Action = "Doctors";
+            ViewData["AssistantId"] = new SelectList(_context.Assistants.Include(a => a.User), "Id", "User.UserName");
             return View("./Doctors/Create");
         }
         
@@ -131,6 +136,7 @@ namespace EiadaClinic.Controllers
         
         public async Task<IActionResult> EditDoctor(string id)
         {
+            ViewBag.Action = "Doctors";
             if (id == null)
             {
                 return NotFound();
@@ -141,7 +147,7 @@ namespace EiadaClinic.Controllers
             {
                 return NotFound();
             }
-            ViewData["AssistantId"] = new SelectList(_context.Assistants, "Id", "Id", doctor.AssistantId);
+            ViewData["AssistantId"] = new SelectList(_context.Assistants.Include(a => a.User), "Id", "User.UserName", doctor.AssistantId);
             return View("./Doctors/Edit", doctor.ToDoctorCreationBindingModel());
         }
        
@@ -170,7 +176,7 @@ namespace EiadaClinic.Controllers
                     doctor.AssistantId = doctorCreationBindingModel.AssistantId;
                     doctor.OpenTime = doctorCreationBindingModel.OpenTime;
                     doctor.CloseTime = doctorCreationBindingModel.CloseTime;
-                    _context.Update(user);
+                    MapUser(user, doctorCreationBindingModel);
                     _context.Update(doctor);
                     await _context.SaveChangesAsync();
                 }
@@ -193,6 +199,7 @@ namespace EiadaClinic.Controllers
         
         public async Task<IActionResult> DeleteDoctor(string id)
         {
+            ViewBag.Action = "Doctors";
             if (id == null)
             {
                 return NotFound();
@@ -238,19 +245,23 @@ namespace EiadaClinic.Controllers
         
         public async Task<IActionResult> Assistants()
         {
+            ViewBag.Action = "Assistants";
             var applicationDbContext = _context.Assistants.Include(a => a.User).Include(a => a.Doctor).ThenInclude(d => d.User);
             return View("./Assistants/Index" ,await applicationDbContext.ToListAsync());
         }
         
         public async Task<IActionResult> Assistant(string id)
         {
+            ViewBag.Action = "Assistants";
             if (id == null)
             {
                 return NotFound();
             }
 
             var assistant = await _context.Assistants
+                .Include(a => a.User)
                 .Include(a => a.Doctor)
+                    .ThenInclude(d => d.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (assistant == null)
             {
@@ -262,6 +273,7 @@ namespace EiadaClinic.Controllers
         
         public IActionResult CreateAssistant()
         {
+            ViewBag.Action = "Assistants";
             ViewData["DoctorId"] = new SelectList(_context.Doctors, "Id", "Id");
             return View("./Assistants/Create");
         }
@@ -270,7 +282,8 @@ namespace EiadaClinic.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateAssistant(AssistantCreationBindingModel assistantCreationBindingModel)
         {
-            //Create 'Doctor' Role if it doesn't exist
+            ViewBag.Action = "Assistants";
+            //Create 'Assistant' Role if it doesn't exist
             string RoleString = "Assistant";
             var role = await _roleManager.RoleExistsAsync(RoleString);
             if (!role)
@@ -291,7 +304,14 @@ namespace EiadaClinic.Controllers
                         DoctorId = assistantCreationBindingModel.DoctorId
                     };
                     _context.Add(assistant);
-                    _context.SaveChanges();
+                   
+                    await _context.SaveChangesAsync();
+
+                    var doctor = await _context.Doctors.Where(d => d.Id.Equals(assistantCreationBindingModel.DoctorId)).SingleAsync();
+                    doctor.Assistant = assistant;
+
+                    _context.Update(doctor);
+                    await _context.SaveChangesAsync();
 
                     await _userManager.AddToRoleAsync(user, RoleString);
                 }
@@ -299,12 +319,13 @@ namespace EiadaClinic.Controllers
                 return RedirectToAction("Assistants");
                 
             }
-            ViewData["DoctorId"] = new SelectList(_context.Doctors, "Id", "Id", assistant.DoctorId);
+            ViewData["DoctorId"] = new SelectList(_context.Doctors.Select(d => d.User), "Id", "User.UserName");
             return View("./Assistants/Create", assistant);
         }
         
         public async Task<IActionResult> EditAssistant(string id)
         {
+            ViewBag.Action = "Assistants";
             if (id == null)
             {
                 return NotFound();
@@ -313,12 +334,12 @@ namespace EiadaClinic.Controllers
                 .Where(a => a.Id.Equals(id))
                 .Include(a => a.User)
                 .Include(a => a.Doctor)
+                    .Include(d => d.User)
                 .SingleAsync();
             if (assistant == null)
             {
                 return NotFound();
             }
-            ViewData["DoctorId"] = new SelectList(_context.Doctors.Include(d => d.User), "Id", "User.UserName", assistant.Doctor.Id);
             return View("./Assistants/Edit", assistant.ToAssistantCreationBindingModel());
         }
         
@@ -326,6 +347,7 @@ namespace EiadaClinic.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditAssistant(string id, AssistantCreationBindingModel assistantCreationBindingModel)
         {
+            ViewBag.Action = "Assistants";
             if (id != assistantCreationBindingModel.Id)
             {
                 return NotFound();
@@ -360,6 +382,7 @@ namespace EiadaClinic.Controllers
         
         public async Task<IActionResult> DeleteAssistant(string id)
         {
+            ViewBag.Action = "Assistants";
             if (id == null)
             {
                 return NotFound();
@@ -379,6 +402,15 @@ namespace EiadaClinic.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteAssistantConfirmed(string id)
         {
+            ViewBag.Action = "Assistants";
+            var doctorContext = _context.Doctors.Where(d => d.AssistantId.Equals(id));
+            if (doctorContext.ToList().Count() > 0)
+            {
+                var doctor = await doctorContext.SingleAsync();
+                    doctor.AssistantId = null;
+                _context.Update(doctor);
+                await _context.SaveChangesAsync();
+            }
             var assistant = await _context.Assistants.FindAsync(id);
             var user = _context.Assistants.Where(a => a.Id.Equals(id)).Include(a => a.User).Single().User;
             _context.Assistants.Remove(assistant);
@@ -395,12 +427,14 @@ namespace EiadaClinic.Controllers
 
         public async Task<IActionResult> InsuranceCompanies()
         {
+            ViewBag.Action = "InsuranceCompanies";
             var applicationDbContext = _context.InsuranceCompanies.Include(i => i.User);
             return View("./InsuranceCompanies/Index", await applicationDbContext.ToListAsync());
         }
 
         public async Task<IActionResult> InsuranceCompany(string id)
         {
+            ViewBag.Action = "InsuranceCompanies";
             if (id == null)
             {
                 return NotFound();
@@ -419,6 +453,7 @@ namespace EiadaClinic.Controllers
 
         public IActionResult CreateCompany()
         {
+            ViewBag.Action = "InsuranceCompanies";
             return View("./InsuranceCompanies/Create");
         }
 
@@ -426,6 +461,7 @@ namespace EiadaClinic.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateCompany(InsuranceCompanyCreationBindingModel insuranceCompanyCreationBindingModel)
         {
+            ViewBag.Action = "InsuranceCompanies";
             //Create 'InsuranceCompanie' Role if it doesn't exist
             string RoleString = "InsuranceCompanie";
             var role = await _roleManager.RoleExistsAsync(RoleString);
@@ -470,6 +506,7 @@ namespace EiadaClinic.Controllers
 
         public async Task<IActionResult> EditCompany(string id)
         {
+            ViewBag.Action = "InsuranceCompanies";
             if (id == null)
             {
                 return NotFound();
@@ -489,6 +526,7 @@ namespace EiadaClinic.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditCompany(string id, InsuranceCompanyCreationBindingModel insuranceCompanyCreationBindingModel)
         {
+            ViewBag.Action = "InsuranceCompanies";
             if (id != insuranceCompanyCreationBindingModel.Id)
             {
                 return NotFound();
@@ -525,6 +563,7 @@ namespace EiadaClinic.Controllers
 
         public async Task<IActionResult> DeleteCompany(string id)
         {
+            ViewBag.Action = "InsuranceCompanies";
             if (id == null)
             {
                 return NotFound();
@@ -545,6 +584,7 @@ namespace EiadaClinic.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteCompanyConfirmed(string id)
         {
+            ViewBag.Action = "InsuranceCompanies";
             var insuranceCompany = await _context.InsuranceCompanies.FindAsync(id);
             _context.InsuranceCompanies.Remove(insuranceCompany);
             await _context.SaveChangesAsync();
@@ -557,6 +597,32 @@ namespace EiadaClinic.Controllers
             return _context.InsuranceCompanies.Any(e => e.Id == id);
         }
 
+        ////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////
+       
+        public async Task<IActionResult> Messages() {
+            return View(await _context.Messages.ToListAsync());
+        }
+
+        public async Task<IActionResult> Reminders()
+        {
+            return View(await _context.Reminders.ToListAsync());
+        }
+
+        public async Task<IActionResult> AddReminder(Reminder reminder)
+        {
+            if(ModelState.IsValid) {
+                await _context.Reminders.AddAsync(reminder);
+                return RedirectToAction("Reminders");
+            }
+
+            return View("Reminders", reminder);
+            
+        }
 
         private EiadaUser CreateUser(UserCreationBindingModel userCreationBindingModel)
         {
@@ -582,7 +648,6 @@ namespace EiadaClinic.Controllers
             user.MiddleName = userCreationBindingModel.MiddleName;
             user.LastName = userCreationBindingModel.LastName;
             user.UserName = userCreationBindingModel.UserName;
-            user.PasswordHash = userCreationBindingModel.Password;
             user.Email = userCreationBindingModel.Email;
             user.Gender = userCreationBindingModel.Gender;
             user.Address = userCreationBindingModel.Address;

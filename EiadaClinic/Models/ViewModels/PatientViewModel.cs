@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Clinic.Models.ViewModels
+namespace EiadaClinic.Models.ViewModels
 {
     [NotMapped]
     public class PatientViewModel

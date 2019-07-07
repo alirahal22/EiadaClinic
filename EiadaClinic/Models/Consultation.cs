@@ -6,13 +6,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Clinic.Models
+namespace EiadaClinic.Models
 {
     public class Consultation
     {
         
         public int Id { get; set; }
-        [Display(Name = "Consultation Title")]
+        [Display(Name = "Title")]
         public string Title { get; set; }
         [Display(Name = "Type")]
         public string Type { get; set; }
