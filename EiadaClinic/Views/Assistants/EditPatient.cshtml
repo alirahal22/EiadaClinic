@@ -1,29 +1,105 @@
-﻿@model EiadaClinic.Models.BindingModels.PatientCreationBindingModel
+﻿@model EiadaClinic.Models.Patient
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Create Patient";
 }
 
-<h2>Edit</h2>
-
-<h4>Patient</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title">Edit Patient</h4>
             </div>
-        </form>
+            <div class="card-body">
+                <form asp-action="EditPatient">
+                    <input asp-for="Id" type="hidden" value="@Model.User.Id" />
+                    <input asp-for="User.Id" type="hidden" value="@Model.User.Id" />
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label asp-for="User.UserName" class="bmd-label-floating"></label>
+                                <input asp-for="User.UserName" class="form-control">
+                                <span asp-validation-for="User.UserName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label asp-for="BloodType" class="bmd-label-floating"></label>
+                                <select asp-for="BloodType" class="form-control" asp-items="ViewBag.BloodType"></select>
+                                <span asp-validation-for="BloodType" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="User.FirstName" class="bmd-label-floating"></label>
+                                <input asp-for="User.FirstName" class="form-control">
+                                <span asp-validation-for="User.FirstName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="User.MiddleName" class="bmd-label-floating"></label>
+                                <input asp-for="User.MiddleName" class="form-control">
+                                <span asp-validation-for="User.MiddleName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="User.LastName" class="bmd-label-floating"></label>
+                                <input asp-for="User.LastName" class="form-control">
+                                <span asp-validation-for="User.LastName" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="User.PhoneNumber" class="bmd-label-floating"></label>
+                                <input asp-for="User.PhoneNumber" class="form-control">
+                                <span asp-validation-for="User.PhoneNumber" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label asp-for="User.Gender" class="bmd-label-floating"></label>
+                                <select asp-for="User.Gender" class="form-control" asp-items="ViewBag.Gender"></select>
+                                <span asp-validation-for="User.Gender" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="User.Birthday" class="bmd-label-floating"></label>
+                                <input asp-for="User.Birthday" class="form-control">
+                                <span asp-validation-for="User.Birthday" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="User.Email" class="bmd-label-floating"></label>
+                                <input asp-for="User.Email" class="form-control">
+                                <span asp-validation-for="User.Email" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="User.Address" class="bmd-label-floating"></label>
+                                <input asp-for="User.Address" class="form-control">
+                                <span asp-validation-for="User.Address" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn col-md-2 btn-primary pull-right">Save</button>
+                    <button asp-action="Patient" asp-route-id="@Model.Id" class="btn btn-danger pull-right">Discard</button>
+                    <div class="clearfix"></div>
+                </form>
+            </div>
+        </div>
+        <a asp-action="Index">Back to List</a>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

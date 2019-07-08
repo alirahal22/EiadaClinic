@@ -1,12 +1,17 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using EiadaClinic.Models
 @using EiadaClinic.Models.Singleton
+@using Microsoft.Extensions.Logging;
+
 
 @inject SignInManager<EiadaUser> SignInManager
 @inject UserManager<EiadaUser> UserManager
 @inject ActiveUser _activeUser
+@inject ILogger<ActiveUser> _logger
 
-@{ 
+@{
     var PartialViewName = "_" + _activeUser.Role + "MenuPartial";
+    _logger.LogInformation(_activeUser.Role);
 }
 
 <!doctype html>
@@ -49,7 +54,7 @@
             <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
                 <div class="container-fluid">
                     <div class="navbar-wrapper">
-                        <a class="navbar-brand" href="#pablo">Dashboard</a>
+                        <a class="navbar-brand" href="#pablo">Welcome, @_activeUser.UserName</a>
                     </div>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="sr-only">Toggle navigation</span>
@@ -57,17 +62,20 @@
                         <span class="navbar-toggler-icon icon-bar"></span>
                         <span class="navbar-toggler-icon icon-bar"></span>
                     </button>
+                    @if (User.IsInRole("Patient"))
+                        {
+                            <partial name="_SearchBar" />
+                        }
+
                     <div class="collapse navbar-collapse justify-content-end">
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link" href="#pablo"> Logout
+                                <a class="nav-link" asp-action="Logout">
+                                    Logout
                                 </a>
                             </li>
                             <!-- your navbar here -->
-                            @*@if(isPatient)
-                                {
-                                    //Add Search Bar Partial View
-                                }*@
+
                         </ul>
                     </div>
                 </div>
@@ -85,7 +93,7 @@
                         <ul>
                             <li>
                                 <a href="https://www.github.com/alirahal22">
-                                    Ali Rahal
+                                    EiadaClinic
                                 </a>
                             </li>
                         </ul>
@@ -94,8 +102,9 @@
                         &copy;
                         <script>
                             document.write(new Date().getFullYear())
-                        </script>, made by
-                        <a href="https://www.github.com/alirahal22" target="_blank">Ali Rahal</a>.
+                        </script>
+                        @*, made by
+                            <a href="https://www.github.com/alirahal22" target="_blank">Ali Rahal</a>.*@
                     </div>
                     <!-- your footer here -->
                 </div>

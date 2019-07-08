@@ -9,6 +9,7 @@ using EiadaClinic.Data;
 using EiadaClinic.Models;
 using EiadaClinic.Models.Singleton;
 using Microsoft.AspNetCore.Identity;
+using EiadaClinic.Models.ViewModels;
 
 namespace EiadaClinic.Controllers
 {
@@ -17,67 +18,83 @@ namespace EiadaClinic.Controllers
         private ActiveUser _activeUser;
         private readonly ApplicationDbContext _context;
         private readonly UserManager<EiadaUser> _userManager;
+        private readonly SignInManager<EiadaUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public PatientsController(ApplicationDbContext context, UserManager<EiadaUser> userManager, RoleManager<IdentityRole> roleManager, ActiveUser activeUser)
+        public PatientsController(ApplicationDbContext context, SignInManager<EiadaUser> signInManager, UserManager<EiadaUser> userManager, RoleManager<IdentityRole> roleManager, ActiveUser activeUser)
         {
             _context = context;
             _activeUser = activeUser;
+            _signInManager = signInManager;
             _userManager = userManager;
             _roleManager = roleManager;
         }
 
         public async Task<IActionResult> Index()
         {
+            ViewBag.Action = "Home";
             List<Doctor> doctors = await _context.PatientDoctors
                 .Where(pd => pd.Patient.User.UserName.Equals(_activeUser.UserName))
                 .Select(pd => pd.Doctor)
                 .Include(pd => pd.User)
                 .ToListAsync();
-
-            return View(doctors);
-
-        }
-
-
-        public async Task<IActionResult> Appointments()
-        {
             List<Appointment> appointments = await _context.Appointments
                 .Where(p => p.Patient.User.UserName.Equals(_activeUser.UserName))
                 .ToListAsync();
-            return View(appointments);
-
+            PatientHomeViewModel patientHomeViewModel = new PatientHomeViewModel() {Doctors = doctors, Appointments = appointments };
+            return View(patientHomeViewModel);
         }
 
-
-        public async Task<IActionResult> Doctor(string doctorid)
+        public async Task<IActionResult> Doctor(string id)
         {
-            if (doctorid == null)
-            {
-                return NotFound();
-            }
-
-            var patient = await _context.Doctors.FindAsync(doctorid);
-            if (patient == null)
-            {
-                return NotFound();
-            }
-
-            List<Consultation> consultations = await _context.Consultations
-                .Where(c => c.Doctor.Id.Equals(doctorid) && c.Patient.Id.Equals(_activeUser.Id)).ToListAsync();
-
-
-            return View(consultations);
-
+            ViewBag.Action = "Home";
+            var consultions = await _context.Consultations
+                .Where(c => c.DoctorId == id && c.PatientId == _activeUser.Id)
+                .ToListAsync();
+            return View(consultions);
         }
 
-        public IActionResult SearchByName(string searchString)
+        public async Task<IActionResult> Search(string searchString)
         {
+            ViewBag.Action = "Home";
             ViewData["CurrentFilter"] = searchString;
-            List<Doctor> doctors = _context.Doctors.Where(d => d.User.FirstName.Contains(searchString) || d.User.LastName.Contains(searchString))
-                .ToList();
-            return View(doctors);
 
+            List<Doctor> doctors = await _context.PatientDoctors
+                .Where(pd => pd.Patient.Id.Equals(_activeUser.Id) 
+                    && (pd.Doctor.User.FirstName.Contains(searchString) 
+                        || pd.Doctor.User.LastName.Contains(searchString) 
+                        || pd.Doctor.User.LastName.Contains(searchString)))
+                .Select(pd => pd.Doctor)
+                .Include(pd => pd.User)
+                .ToListAsync();
+            List<Appointment> appointments = await _context.Appointments
+                .Where(p => p.Patient.User.UserName.Equals(_activeUser.UserName))
+                .ToListAsync();
+            PatientHomeViewModel patientHomeViewModel = new PatientHomeViewModel() { Doctors = doctors, Appointments = appointments };
+            return View("Index", patientHomeViewModel);
+
+        }
+
+        public IActionResult Message()
+        {
+            ViewBag.Action = "Message";
+            ViewBag.Id = _activeUser.Id;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SendMessage(Message message)
+        {
+            message.sender = (EiadaUser)await _context.Users.FindAsync(message.sender.Id);
+            _context.Add(message);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return Redirect("/");
         }
     }
 }

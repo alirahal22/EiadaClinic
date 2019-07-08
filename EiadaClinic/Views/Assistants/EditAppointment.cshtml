@@ -1,0 +1,47 @@
+﻿@model Appointment
+
+@{
+    ViewData["Title"] = "Create Patient";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title">Edit Appointment</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="EditAppointment">
+                    <input asp-for="Id" type="hidden" value="@Model.Id" />
+                    <input asp-for="Patient.Id" type="hidden" value="@Model.Patient.Id" />
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="Date" class="bmd-label-floating"></label>
+                                <input asp-for="Date" class="form-control">
+                                <span asp-validation-for="Date" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label asp-for="Time" class="bmd-label-floating"></label>
+                            <select asp-for="Time" class="form-control" asp-items="ViewBag.Time"></select>
+                            <span asp-validation-for="Time" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn col-md-2 btn-primary pull-right">Save</button>
+                </form>
+                <form method="post">
+                    <button asp-action="DeleteAppointment" asp-route-id="@Model.Id" class="btn col-md-2 btn-danger pull-right">Delete</button>
+                    <div class="clearfix"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Appointments">Back to List</a>
+</div>

@@ -1,29 +1,137 @@
-﻿@model IEnumerable<EiadaClinic.Models.Message>
+﻿@model EiadaClinic.Models.ViewModels.MessagesViewModel
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.content)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.content)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+@{
+    ViewData["Title"] = "Messages";
 }
-    </tbody>
-</table>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title ">Messages</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class=" text-primary">
+                        <th>
+                            Sender
+                        </th>
+                        <th>
+                            Content
+                        </th>
+                        <th></th>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Messages)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.sender.UserName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.content)
+                                    </td>
+                                    <td class="col-md-12 pull-right">
+                                        <a asp-action="DeleteMessage" asp-route-id="@item.Id">Delete</a>
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title">Add Reminder</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="AddReminder">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label asp-for="Reminder.Title" class="bmd-label-floating"></label>
+                                <input asp-for="Reminder.Title" class="form-control">
+                                <span asp-validation-for="Reminder.Title" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label asp-for="Reminder.Content" class="bmd-label-floating"></label>
+                                <input asp-for="Reminder.Content" class="form-control">
+                                <span asp-validation-for="Reminder.Content" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label asp-for="Reminder.Priority" class="bmd-label-floating"></label>
+                                <select asp-for="Reminder.Priority" asp-items="ViewBag.Priority" class="form-control"></select>
+                                <span asp-validation-for="Reminder.Priority" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary pull-right">Add</button>
+                    <div class="clearfix"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title ">Reminders</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class=" text-primary">
+                        <th>
+                            Title
+                        </th>
+                        <th>
+                            Content
+                        </th>
+                        <th>
+                            Priority
+                        </th>
+                        <th></th>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Reminders)
+                            {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Title)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Content)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Priority)
+                                </td>
+                                <td class="col-md-12 pull-right">
+                                    <a asp-action="DeleteReminder" asp-route-id="@item.Id">Delete</a>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

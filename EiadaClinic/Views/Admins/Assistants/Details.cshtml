@@ -15,14 +15,14 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label asp-for="User.UserName" class="bmd-label-floating"></label>
-                                <input asp-for="User.UserName" class="form-control">
+                                <input asp-for="User.UserName" class="form-control" disabled>
                                 <span asp-validation-for="User.UserName" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label asp-for="Doctor.User.UserName" class="bmd-label-floating"></label>
-                                <input asp-for="Doctor.User.UserName" type="password" class="form-control">
+                                <label class="bmd-label-floating">Doctor</label>
+                                <input asp-for="Doctor.User.UserName" class="form-control" disabled>
                                 <span asp-validation-for="Doctor.User.UserName" class="text-danger"></span>
                             </div>
                         </div>
@@ -92,7 +92,6 @@
                         </div>
                     </div>
                     <button asp-action="EditAssistant" asp-route-id="@Model.Id" class="btn col-md-2 btn-primary pull-right">Edit</button>
-                    <div class="clearfix"></div>
                 </form>
                 <form method="post">
                     <button asp-action="DeleteAssistant" asp-route-id="@Model.Id" class="btn col-md-2 btn-danger pull-right">Delete</button>

@@ -1,0 +1,102 @@
+﻿@model EiadaClinic.Models.Consultation
+
+@{
+    ViewData["Title"] = "Create Consultation";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title">Create Consultation</h4>
+                <p class="card-category">Please fill the following form</p>
+            </div>
+            <div class="card-body">
+                <form asp-action="CreateConsultation">
+                    <input type="hidden" asp-for="Patient.Id" value="@ViewBag.PatientId"/>
+                    <input type="hidden" asp-for="Doctor.Id" value="@ViewBag.DoctorId"/>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Title" class="bmd-label-floating"></label>
+                                <input asp-for="Title" class="form-control">
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Type" class="bmd-label-floating"></label>
+                                <input asp-for="Type" class="form-control">
+                                <span asp-validation-for="Type" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="Date" class="bmd-label-floating"></label>
+                                <input asp-for="Date" class="form-control">
+                                <span asp-validation-for="Date" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="Symptoms" class="bmd-label-floating"></label>
+                                <input asp-for="Symptoms" class="form-control">
+                                <span asp-validation-for="Symptoms" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="Diagnosis" class="bmd-label-floating"></label>
+                                <input asp-for="Diagnosis" class="form-control">
+                                <span asp-validation-for="Diagnosis" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="Treatment" class="bmd-label-floating"></label>
+                                <input asp-for="Treatment" class="form-control">
+                                <span asp-validation-for="Treatment" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="BloodPressure" class="bmd-label-floating"></label>
+                                <input asp-for="BloodPressure" class="form-control">
+                                <span asp-validation-for="BloodPressure" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="Temperature" class="bmd-label-floating"></label>
+                                <input asp-for="Temperature" class="form-control">
+                                <span asp-validation-for="Temperature" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="Fee" class="bmd-label-floating"></label>
+                                <input asp-for="Fee" class="form-control">
+                                <span asp-validation-for="Fee" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary pull-right">Create</button>
+                    <button asp-action="Index" class="btn btn-danger pull-right">Discard</button>
+
+                    <div class="clearfix"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Home</a>
+</div>

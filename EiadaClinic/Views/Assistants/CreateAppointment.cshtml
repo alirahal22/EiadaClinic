@@ -1,0 +1,38 @@
+﻿@model EiadaClinic.Models.Appointment
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title">Create Appointment</h4>
+                <p class="card-category">Please fill the following form</p>
+            </div>
+            <div class="card-body">
+                <form asp-action="CreateAppointment">
+                    <input asp-for="Patient.Id" type="hidden" value="@ViewBag.PatientId" />
+                    <input asp-for="Doctor.Id" type="hidden" value="@ViewBag.DoctorId" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Date" class="bmd-label-floating"></label>
+                                <input asp-for="Date" class="form-control">
+                                <span asp-validation-for="Date" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label asp-for="Time" class="bmd-label-floating"></label>
+                                <select asp-for="Time" class="form-control" asp-items="ViewBag.Time" ></select>
+                                <span asp-validation-for="Time" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn col-md-2 btn-primary pull-right">Add</button>
+                    <button asp-action="Index" class="btn col-md-2 btn-danger pull-right">Discard</button>
+                </form>
+            </div>
+        </div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+</div>
+

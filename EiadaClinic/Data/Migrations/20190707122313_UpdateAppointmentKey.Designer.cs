@@ -4,14 +4,16 @@ using EiadaClinic.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EiadaClinic.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190707122313_UpdateAppointmentKey")]
+    partial class UpdateAppointmentKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,8 +32,6 @@ namespace EiadaClinic.Migrations
                     b.Property<string>("DoctorId");
 
                     b.Property<string>("PatientId");
-
-                    b.Property<string>("Time");
 
                     b.HasKey("Id");
 
@@ -96,6 +96,8 @@ namespace EiadaClinic.Migrations
                 {
                     b.Property<string>("Id");
 
+                    b.Property<string>("AssistantId");
+
                     b.Property<string>("CloseTime");
 
                     b.Property<string>("OpenTime");
@@ -103,6 +105,8 @@ namespace EiadaClinic.Migrations
                     b.Property<string>("Specialty");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AssistantId");
 
                     b.ToTable("Doctors");
                 });
@@ -417,6 +421,10 @@ namespace EiadaClinic.Migrations
 
             modelBuilder.Entity("EiadaClinic.Models.Doctor", b =>
                 {
+                    b.HasOne("EiadaClinic.Models.Assistant", "Assistant")
+                        .WithMany()
+                        .HasForeignKey("AssistantId");
+
                     b.HasOne("EiadaClinic.Models.EiadaUser", "User")
                         .WithMany()
                         .HasForeignKey("Id")

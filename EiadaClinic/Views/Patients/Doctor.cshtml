@@ -1,31 +1,38 @@
-﻿@model IEnumerable<EiadaClinic.Models.Doctor>
+﻿@model IEnumerable<EiadaClinic.Models.Consultation>
 
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Consultation";
 }
 
 <div class="row">
     <div class="col-md-12">
         <div class="card">
             <div class="card-header card-header-primary">
-                <h4 class="card-title ">Doctors</h4>
-                <p class="card-category"> <a asp-action="CreateDoctor">Create new doctor</a> </p>
+                <h4 class="card-title ">Consultations</h4>
+                <p class="card-category"> </p>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table">
                         <thead class=" text-primary">
                         <th>
-                            @Html.DisplayNameFor(model => model.User.UserName)
+                            Type
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.User.Gender)
+                            Date
+                        </th>
+
+                        <th>
+                            Symptoms
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.Specialty)
+                            Diagnosis
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.OpenTime)
+                            Treatment
+                        </th>
+                        <th>
+                            Fee
                         </th>
                         <th></th>
                         </thead>
@@ -34,27 +41,31 @@
                             {
                                 <tr>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.User.UserName)
+                                        @Html.DisplayFor(modelItem => item.Type)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.User.Gender)
+                                        @item.Date.ToString()
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Specialty)
+                                        @Html.DisplayFor(modelItem => item.Symptoms)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.OpenTime)
+                                        @Html.DisplayFor(modelItem => item.Diagnosis)
                                     </td>
-                                    <td class="col-md-12 pull-right">
-                                        <a asp-action="Doctor" asp-route-id="@item.Id">Details</a>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Treatment)
                                     </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Fee)
+                                    </td>
+
                                 </tr>
                             }
-
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
+        <a asp-action="Index">Back to List</a>
     </div>
-</div>
+ </div>

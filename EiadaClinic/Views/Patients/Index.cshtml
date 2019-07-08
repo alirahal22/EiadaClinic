@@ -1,1 +1,95 @@
-﻿
+﻿@model EiadaClinic.Models.ViewModels.PatientHomeViewModel
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title ">Doctors</h4>
+                <p class="card-category"> </p>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class=" text-primary">
+                        <th>
+                            UserName
+                        </th>
+                        <th>
+                            FirstName
+                        </th>
+
+                        <th>
+                            LastName
+                        </th>
+                        <th>
+                            Specialty
+                        </th>
+                        <th></th>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Doctors)
+                            {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.User.UserName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.User.FirstName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.User.LastName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Specialty)
+                                </td>
+                                <td class="col-md-12 pull-right">
+                                    <a asp-action="Doctor" asp-route-id="@item.User.Id">Details</a>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title ">Appointments</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class=" text-primary">
+                        <th>
+                            Doctor
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                        <th></th>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Appointments)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Doctor.User.UserName)
+                                    </td>
+                                    <td>
+                                        @item.Date.ToString()
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

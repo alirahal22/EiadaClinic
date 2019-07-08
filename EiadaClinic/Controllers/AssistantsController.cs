@@ -10,6 +10,8 @@ using EiadaClinic.Models;
 using EiadaClinic.Models.BindingModels;
 using EiadaClinic.Models.Singleton;
 using Microsoft.AspNetCore.Identity;
+using EiadaClinic.Models.ViewModels;
+using Microsoft.Extensions.Logging;
 
 namespace EiadaClinic.Controllers
 {
@@ -18,25 +20,40 @@ namespace EiadaClinic.Controllers
         private ActiveUser _activeUser;
         private readonly ApplicationDbContext _context;
         private readonly UserManager<EiadaUser> _userManager;
+        private readonly SignInManager<EiadaUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ILogger<AssistantsController> _logger;
 
-        public AssistantsController(ApplicationDbContext context, RoleManager<IdentityRole> roleManager, UserManager<EiadaUser> userManager, ActiveUser activeUser)
+        string[] gender = new string[2] { "Male", "Female" };
+        string[] bloodtypes = new string[8] { "A+", "B+", "O+", "AB+", "A-", "B-", "O-", "AB-" };
+        string[] times = new string[24] { "1:00 AM", "2:00 AM", "3:00 AM", "4:00 AM", "5:00 AM", "6:00 AM", "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 AM",
+            "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM", "10:00 PM", "11:00 PM", "12:00 PM" };
+        public AssistantsController(ApplicationDbContext context, 
+            SignInManager<EiadaUser> signInManager, 
+            RoleManager<IdentityRole> roleManager, 
+            UserManager<EiadaUser> userManager, 
+            ActiveUser activeUser,
+            ILogger<AssistantsController> logger)
         {
             _activeUser = activeUser;
             _context = context;
+            _signInManager = signInManager;
             _userManager = userManager;
             _roleManager = roleManager;
+            _logger = logger;
         }
 
 
         public async Task<IActionResult> Index()
         {
+            ViewBag.Action = "Home";
             var assistant = await _context.Assistants
                 .Where(a => a.Id.Equals(_activeUser.Id))
                 .Include(a => a.User)
                 .Include(a => a.Doctor)
                 .SingleAsync();
             List<Patient> patients = await _context.PatientDoctors
+                .Where(pd => assistant.Doctor.Id.Equals(pd.Doctor.Id))
                 .Select(pd => pd.Patient)
                 .Include(p => p.User)
                 .ToListAsync();
@@ -45,8 +62,17 @@ namespace EiadaClinic.Controllers
 
         public async Task<IActionResult> Appointments()
         {
+            ViewBag.Action = "Appointments";
+            
+
+            var assistant = await _context.Assistants
+                .Where(a => a.Id.Equals(_activeUser.Id))
+                .Include(a => a.User)
+                .Include(a => a.Doctor)
+                .SingleAsync();
+
             List<Appointment> appointments = await _context.Appointments
-                .Where(a => a.Doctor.AssistantId.Equals(_activeUser.Id))
+                .Where(a => a.Doctor.Id.Equals(assistant.DoctorId))
                 .Include(a => a.Patient)
                     .ThenInclude(p => p.User)
                 .ToListAsync();
@@ -55,16 +81,34 @@ namespace EiadaClinic.Controllers
 
         public async Task<IActionResult> Patient(string id)
         {
-            return View(await _context.Patients
-                .Where(p => p.Id.Equals(id))
-                .Include(p => p.Consultations)
-                .Include(p => p.Appointments)
-                .SingleAsync());
+            ViewBag.Action = "Home";
+
+            var assistant = await _context.Assistants
+                .Where(a => a.Id.Equals(_activeUser.Id))
+                .Include(a => a.User)
+                .Include(a => a.Doctor)
+                .SingleAsync();
+            var patientViewModel = new PatientViewModel()
+            {
+                Patient = await _context.Patients
+                    .Where(p => p.Id.Equals(id))
+                    .Include(p => p.User)
+                    .Include(p => p.Consultations)
+                    .Include(p => p.Appointments)
+                    .SingleAsync(),
+                Appointments = await _context.Appointments
+                    .Where(a => a.Patient.Id.Equals(id) && a.Doctor.Id.Equals(assistant.DoctorId))
+                    .ToListAsync()
+            };
+            return View(patientViewModel);
         }
 
         //Create Patient
         public IActionResult CreatePatient()
         {
+            ViewBag.Action = "Home";
+            ViewBag.Gender = gender.Select(g => new SelectListItem { Text = g, Value = g });
+            ViewBag.BloodType = bloodtypes.Select(g => new SelectListItem { Text = g, Value = g });
             return View();
         }
 
@@ -73,6 +117,8 @@ namespace EiadaClinic.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreatePatient(PatientCreationBindingModel patientCreationBindingModel)
         {
+            ViewBag.Gender = gender.Select(g => new SelectListItem { Text = g, Value = g });
+            ViewBag.BloodType = bloodtypes.Select(g => new SelectListItem { Text = g, Value = g });
             //Create 'Patient' Role if it doesn't exist
             string RoleString = "Patient";
             var role = await _roleManager.RoleExistsAsync(RoleString);
@@ -97,9 +143,12 @@ namespace EiadaClinic.Controllers
                     _context.Add(patient);
                     _context.SaveChanges();
 
-
-                    //var activeUser = _userManager.FindByNameAsync(_activeUser.UserName);
-                    Doctor doctor = _context.Doctors.Where(d => d.AssistantId.Equals(_activeUser.Id)).Single();
+                    var assistant = await _context.Assistants
+                    .Where(a => a.Id.Equals(_activeUser.Id))
+                    .Include(a => a.User)
+                    .Include(a => a.Doctor)
+                    .SingleAsync();
+                    Doctor doctor = _context.Doctors.Where(d => d.Id.Equals(assistant.Id)).Single();
                     PatientDoctor pd = new PatientDoctor() { Patient = patient, Doctor = doctor };
                     _context.Add(pd);
                     await _context.SaveChangesAsync();
@@ -114,18 +163,25 @@ namespace EiadaClinic.Controllers
 
                 return RedirectToAction("Create", patientCreationBindingModel);
             }
-            ViewData["UserId"] = new SelectList(_context.Set<EiadaUser>(), "Id", "Id", patient.Id);
             return View("Create", patient);
         }
 
         public async Task<IActionResult> EditPatient(string id)
         {
+            ViewBag.Action = "Home";
+
+            ViewBag.Gender = gender.Select(g => new SelectListItem { Text = g, Value = g });
+            ViewBag.BloodType = bloodtypes.Select(g => new SelectListItem { Text = g, Value = g });
+
             if (id == null)
             {
                 return NotFound();
             }
 
-            var patient = await _context.Patients.FindAsync(id);
+            var patient = await _context.Patients
+                .Where(p => p.Id.Equals(id))
+                .Include(p => p.User)
+                .SingleAsync();
             if (patient == null)
             {
                 return NotFound();
@@ -135,40 +191,105 @@ namespace EiadaClinic.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditPatient(string id, PatientCreationBindingModel patientCreationBindingModel)
+        public async Task<IActionResult> EditPatient(string id, Patient patient)
         {
-            if (id != patientCreationBindingModel.Id)
+
+            #region DontOpen
+            EiadaUser eiadaUser = await _userManager.FindByIdAsync(patient.User.Id);
+            eiadaUser.Email = patient.User.Email;
+            eiadaUser.FirstName = patient.User.FirstName;
+            eiadaUser.MiddleName = patient.User.MiddleName;
+            eiadaUser.LastName = patient.User.LastName;
+            eiadaUser.UserName = patient.User.UserName;
+            eiadaUser.PhoneNumber = patient.User.PhoneNumber;
+            #endregion
+
+            if (id != patient.Id)
             {
                 return NotFound();
             }
-            Patient patient = null;
             if (ModelState.IsValid)
             {
-                try
-                {
-                    EiadaUser user = CreateUser(patientCreationBindingModel);
-                    user.Id = patientCreationBindingModel.Id;
-                    patient = new Patient() { Id = patientCreationBindingModel.Id, BloodType = patientCreationBindingModel.BloodType };
-                    _context.Update(patient);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PatientExists(patient.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _context.Update(patient);
+                await _userManager.UpdateAsync(eiadaUser);
+                await _context.SaveChangesAsync();
+                return Redirect("~/Assistants/Patient/" + patient.Id);
             }
-            ViewData["UserId"] = new SelectList(_context.Set<EiadaUser>(), "Id", "Id", patient.Id);
-            return View(patientCreationBindingModel);
+            ViewBag.Gender = gender.Select(g => new SelectListItem { Text = g, Value = g });
+            ViewBag.BloodType = bloodtypes.Select(g => new SelectListItem { Text = g, Value = g });
+            return View(patient);
         }
 
+        public async Task<IActionResult> CreateAppointment(string id)
+        {
+            ViewBag.Time = times.Select(g => new SelectListItem { Text = g, Value = g });
+            ViewBag.Action = "Appointments";
+            ViewBag.PatientId = id;
+            ViewBag.DoctorId = await _context.Assistants
+                .Where(a => a.Id.Equals(_activeUser.Id))
+                .Select(a => a.DoctorId)
+                .SingleAsync();
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateAppointment(Appointment appointment)
+        {
+            var app = new Appointment()
+            {
+                Date = appointment.Date,
+                Doctor = await _context.Doctors.FindAsync(appointment.Doctor.Id),
+                Patient = await _context.Patients.FindAsync(appointment.Patient.Id)
+
+
+            };
+            _context.Appointments.Add(app);
+            await _context.SaveChangesAsync();
+            return Redirect("~/Assistants/Patient/" + appointment.Patient.Id);
+        }
+
+        public async Task<IActionResult> DeleteAppointment(int id)
+        {
+            var appointment = await _context.Appointments.Where(a => a.Id == id).Include(a => a.Patient).SingleAsync();
+            _context.Remove(appointment);
+            _context.SaveChanges();
+            return Redirect("~/Assistants/Patient/" + appointment.Patient.Id);
+
+        }
+
+        public async Task<IActionResult> EditAppointment(int id)
+        {
+            ViewBag.Action = "Appointments";
+            ViewBag.Time = times.Select(g => new SelectListItem { Text = g, Value = g }); 
+            var appointment = await _context.Appointments
+                .Where(a => a.Id == id)
+                .Include(a => a.Patient)
+                .SingleAsync();
+            return View(appointment);
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditAppointment(Appointment appointment)
+        {
+            _context.Update(appointment);
+            await _context.SaveChangesAsync();
+            return Redirect("~/Assistants/Patient/" + appointment.Patient.Id);
+        }
+
+        public IActionResult Message()
+        {
+            ViewBag.Action = "Message";
+            ViewBag.Id = _activeUser.Id;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SendMessage(Message message)
+        {
+            message.sender = (EiadaUser)await _context.Users.FindAsync(message.sender.Id);
+            _context.Add(message);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
 
         private bool PatientExists(string id)
         {
@@ -183,6 +304,7 @@ namespace EiadaClinic.Controllers
                 MiddleName = userCreationBindingModel.MiddleName,
                 LastName = userCreationBindingModel.LastName,
                 UserName = userCreationBindingModel.UserName,
+                Address = userCreationBindingModel.Address,
                 PasswordHash = userCreationBindingModel.Password,
                 Email = userCreationBindingModel.Email,
                 Gender = userCreationBindingModel.Gender,
@@ -192,6 +314,10 @@ namespace EiadaClinic.Controllers
             };
         }
 
-
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return Redirect("/");
+        }
     }
 }
