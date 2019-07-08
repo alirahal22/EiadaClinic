@@ -1,5 +1,6 @@
 ﻿@model EiadaClinic.Models.BindingModels.LoginBindingModel
 @{
+    Layout = null;
     ViewData["Title"] = "Index";
 }
 <head>
@@ -24,7 +25,7 @@
                     Sign In
                 </span>
             </div>
-            <form class="login100-form validate-form" asp-action="LoginAsync" method="post">
+            <form class="login100-form validate-form" asp-action="Login" method="post">
 
                 <div class="wrap-input100 m-b-26">
                     @*<div asp-validation-summary="All" class="text-danger"></div>*@
@@ -35,29 +36,13 @@
                 </div>
                 <div class="wrap-input100  m-b-18">
                     <span asp-for="Password" class="label-input100">Password</span>
-                    <input asp-for="Password" class="input100 form-control" type="password" name="password" placeholder="Enter password">
+                    <input asp-for="Password" value="123qweASD!" class="input100 form-control" type="password" name="password" placeholder="Enter password">
                     <span asp-validation-for="Password" class="text-danger"></span>
                     
                 </div>
                 <div class="flex-sb-m w-full p-b-30">
                     <div class="contact100-form-checkbox">
-                        <input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
-                        <label asp-for="RememberMe" class="label-checkbox100" for="ckb1">
-
-                            <input asp-for="RememberMe" />
-                            @Html.DisplayNameFor(m => m.RememberMe)
-                        </label>
-                    </div>
-                    <div>
-                        <a href="#" class="txt1">
-                            Forgot Password?
-                        </a>
-                    </div>
-
-                    <div>
-                        <a href="#" class="txt1">
-                            Forgot Password?
-                        </a>
+                        <input asp-for="RememberMe" /> @Html.DisplayNameFor(m => m.RememberMe)
                     </div>
                 </div>
 

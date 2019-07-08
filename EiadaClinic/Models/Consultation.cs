@@ -6,14 +6,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Clinic.Models
+namespace EiadaClinic.Models
 {
     public class Consultation
     {
         
         public int Id { get; set; }
-        [Display(Name = "Consultation Title")]
-        [Required]
+        [Display(Name = "Title")]
         public string Title { get; set; }
         [Display(Name = "Type")]
         public string Type { get; set; }
@@ -32,7 +31,11 @@ namespace Clinic.Models
         public float Fee { get; set; }
         [Display(Name = "Treatment")]
         public string Treatment { get; set; }
+        [ForeignKey("Doctor")]
+        public string DoctorId { get; set; }
         public Doctor Doctor { get; set; }
+        [ForeignKey("Patient")]
+        public string PatientId { get; set; }
         public Patient Patient { get; set; }
     }
 }

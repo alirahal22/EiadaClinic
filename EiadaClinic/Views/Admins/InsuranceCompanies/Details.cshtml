@@ -1,36 +1,75 @@
-﻿@model Clinic.Models.InsuranceCompany
+﻿@model EiadaClinic.Models.InsuranceCompany
 
-@{
-    ViewData["Title"] = "Details";
-}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title">Create Doctor</h4>
+                <p class="card-category">Please fill the following form</p>
+            </div>
+            <div class="card-body">
+                <form asp-action="EditDoctor" method="get">
+                    <input asp-for="Id" type="hidden" value="@Model.Id" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="User.UserName" class="bmd-label-floating"></label>
+                                <input asp-for="User.UserName" class="form-control" disabled>
+                                <span asp-validation-for="User.UserName" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
 
-<h2>Details</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Name" class="bmd-label-floating"></label>
+                                <input asp-for="Name" class="form-control" disabled>
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="User.Email" class="bmd-label-floating"></label>
+                                <input asp-for="User.Email" class="form-control" disabled>
+                                <span asp-validation-for="User.Email" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="User.PhoneNumber" class="bmd-label-floating"></label>
+                                <input asp-for="User.PhoneNumber" class="form-control" disabled>
+                                <span asp-validation-for="User.PhoneNumber" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Fax" class="bmd-label-floating"></label>
+                                <input asp-for="Fax" class="form-control" disabled>
+                                <span asp-validation-for="Fax" class="text-danger" disabled></span>
+                            </div>
+                        </div>
+                    </div>
 
-<div>
-    <h4>InsuranceCompany</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.User)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.User.Id)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Fax)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Fax)
-        </dd>
-    </dl>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label asp-for="User.Address" class="bmd-label-floating"></label>
+                                <input asp-for="User.Address" class="form-control" disabled>
+                                <span asp-validation-for="User.Address" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <button asp-action="EditCompany" asp-route-id="@Model.Id" class="btn col-md-2 btn-primary pull-right">Edit</button>
+                </form>
+                <form method="post">
+                    <button asp-action="DeleteCompany" asp-route-id="@Model.Id" class="btn col-md-2 btn-danger pull-right">Delete</button>
+                </form>
+            </div>
+        </div>
+        <a asp-action="Doctors">Back to List</a>
+    </div>
 </div>
-<div>
-    <a asp-action="EditCompany" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="InsuranceCompanies">Back to List</a>
-</div>
+

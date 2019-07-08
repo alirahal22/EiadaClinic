@@ -1,4 +1,4 @@
-﻿using Clinic.Models;
+﻿using EiadaClinic.Models;
 using EiadaClinic.Data;
 using Microsoft.AspNetCore.Identity;
 using System;

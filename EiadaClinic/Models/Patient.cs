@@ -1,4 +1,4 @@
-﻿using Clinic.Models;
+﻿using EiadaClinic.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

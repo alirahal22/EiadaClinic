@@ -1,24 +1,148 @@
-﻿@model EiadaClinic.Models.Patient
+﻿@model EiadaClinic.Models.ViewModels.DoctorPatientViewModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Patient Details";
 }
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title">Patient Details</h4>
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label asp-for="Patient.User.UserName" class="bmd-label-floating"></label>
+                                <input asp-for="Patient.User.UserName" class="form-control" disabled>
+                                <span asp-validation-for="Patient.User.UserName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label asp-for="Patient.BloodType" class="bmd-label-floating"></label>
+                                <input asp-for="Patient.BloodType" type="password" class="form-control" disabled>
+                                <span asp-validation-for="Patient.BloodType" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="Patient.User.FirstName" class="bmd-label-floating"></label>
+                                <input asp-for="Patient.User.FirstName" class="form-control" disabled>
+                                <span asp-validation-for="Patient.User.FirstName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="Patient.User.MiddleName" class="bmd-label-floating"></label>
+                                <input asp-for="Patient.User.MiddleName" class="form-control" disabled>
+                                <span asp-validation-for="Patient.User.MiddleName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="Patient.User.LastName" class="bmd-label-floating"></label>
+                                <input asp-for="Patient.User.LastName" class="form-control" disabled>
+                                <span asp-validation-for="Patient.User.LastName" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
 
-<h2>Details</h2>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="Patient.User.PhoneNumber" class="bmd-label-floating"></label>
+                                <input asp-for="Patient.User.PhoneNumber" class="form-control" disabled>
+                                <span asp-validation-for="Patient.User.PhoneNumber" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="Patient.User.Gender" class="bmd-label-floating"></label>
+                                <input asp-for="Patient.User.Gender" class="form-control" disabled>
+                                <span asp-validation-for="Patient.User.Gender" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="Patient.User.Birthday" class="bmd-label-floating"></label>
+                                <input asp-for="Patient.User.Birthday" class="form-control" disabled>
+                                <span asp-validation-for="Patient.User.Birthday" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
 
-<div>
-    <h4>Patient</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.User)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.User.Id)
-        </dd>
-    </dl>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Patient.User.Email" class="bmd-label-floating"></label>
+                                <input asp-for="Patient.User.Email" class="form-control" disabled>
+                                <span asp-validation-for="Patient.User.Email" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Patient.User.Address" class="bmd-label-floating"></label>
+                                <input asp-for="Patient.User.Address" class="form-control" disabled>
+                                <span asp-validation-for="Patient.User.Address" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </form>
+            </div>
+        </div>
+        <a asp-action="Index">Back to List</a>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title ">Consultation</h4>
+                <p class="card-category"> <a asp-action="CreateConsultation" asp-route-id="@Model.Patient.Id">Create new consultation</a> </p>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class=" text-primary">
+                        <th>
+                            Title
+                        </th>
+                        <th>
+                            Type
+                        </th>
+                        <th>
+                            Fee
+                        </th>
+                        <th></th>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Consultations)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Title)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Type)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Fee)
+                                    </td>
+                                    <td class="col-md-12 pull-right">
+                                        <a asp-action="EditConsultation" asp-route-id="@item.Id">Edit</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

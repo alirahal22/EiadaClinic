@@ -5,21 +5,24 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Clinic.Models;
+using EiadaClinic.Models;
 using EiadaClinic.Data;
 using EiadaClinic.Models;
 using EiadaClinic.Models.Singleton;
+using Microsoft.AspNetCore.Identity;
 
 namespace EiadaClinic.Controllers
 {
     public class InsuranceCompaniesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly SignInManager<EiadaUser> _signInManager;
         private readonly ActiveUser _activeUser;
 
-        public InsuranceCompaniesController(ApplicationDbContext context, ActiveUser activeUser)
+        public InsuranceCompaniesController(ApplicationDbContext context, ActiveUser activeUser, SignInManager<EiadaUser> signInManager)
         {
             _context = context;
+            _signInManager = signInManager;
             _activeUser = activeUser;
         }
 
@@ -36,11 +39,15 @@ namespace EiadaClinic.Controllers
                 .Include(c => c.Patient);
             return View(consultations);
         }
-        
-        
 
-        
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return Redirect("/");
+        }
 
-        
+
+
+
     }
 }

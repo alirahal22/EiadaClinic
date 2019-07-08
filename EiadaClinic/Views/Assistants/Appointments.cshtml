@@ -1,0 +1,52 @@
+﻿@model IEnumerable<EiadaClinic.Models.Appointment>
+
+@{
+    ViewData["Title"] = "Appointments";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title ">Appointments</h4>
+                <p class="card-category"> <a asp-action="CreateAppointment">Create new appointment</a> </p>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class=" text-primary">
+                        <th>
+                            Patient
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                        <th></th>
+                        <th></th>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Patient.User.UserName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Date)
+                                </td>
+                                <td class="col-md-6 pull-right">
+                                    <a asp-action="EditAppointment" asp-route-id="@item.Id">Edit</a>
+                                </td>
+                                <td class="col-md-6 pull-right">
+                                    <a asp-action="DeleteAppointment" asp-route-id="@item.Id">Delete</a>
+                                </td>
+                            </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

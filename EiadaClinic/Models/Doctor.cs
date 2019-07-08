@@ -1,4 +1,4 @@
-﻿using Clinic.Models;
+﻿using EiadaClinic.Models;
 using EiadaClinic.Models.BindingModels;
 using System;
 using System.Collections.Generic;
@@ -17,11 +17,7 @@ namespace EiadaClinic.Models
         public string Specialty { get; set; }
         public string OpenTime { get; set; }
         public string CloseTime { get; set; }
-
-        [ForeignKey("Assistant")]
-        public string AssistantId { get; set; }
-        public Assistant Assistant { get; set; }
-  
+       
 
         public virtual ICollection<PatientDoctor> PatientDoctors { get; set; }
         public virtual ICollection<Consultation> Consultations { get; set; }

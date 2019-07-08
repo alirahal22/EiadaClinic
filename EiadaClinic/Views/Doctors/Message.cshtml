@@ -1,0 +1,37 @@
+﻿@model EiadaClinic.Models.Message
+@{
+    ViewData["Title"] = "Create Assistant";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title">Send Message</h4>
+                <p class="card-category">Enter your message below</p>
+            </div>
+            <div class="card-body">
+                <form asp-action="SendMessage">
+                    <input type="hidden" asp-for="sender.Id" value="@ViewBag.Id"/>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="content" class="bmd-label-floating"></label>
+                                <input asp-for="content" class="form-control">
+                                <span asp-validation-for="content" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary pull-right">Send</button>
+                    <button asp-action="Index" class="btn btn-danger pull-right">Discard</button>
+
+                    <div class="clearfix"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Assistants">Back to List</a>
+</div>

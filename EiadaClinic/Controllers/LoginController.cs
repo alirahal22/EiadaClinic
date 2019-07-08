@@ -36,13 +36,21 @@ namespace EiadaClinic.Controllers
 
         public IActionResult Index()
         {
+            //var user = new EiadaUser
+            //{
+            //    UserName = "admin",
+            //    SecurityStamp = Guid.NewGuid().ToString()
+            //};
+            //var result = await _userManager.CreateAsync(user, "123qweASD!");
+            //await _roleManager.CreateAsync(new IdentityRole("Admin"));
+            //await _userManager.AddToRoleAsync(user, "Admin");
             return View();
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LoginAsync()
+        public async Task<IActionResult> Login()
         {
             //Invalid Input
             if (!ModelState.IsValid)
@@ -61,6 +69,7 @@ namespace EiadaClinic.Controllers
 
                 _activeUser.UserName = Input.UserName;
                 _activeUser.Id = user.Id;
+                _activeUser.Role = roles[0] + "s";
                 return Redirect("~/" + roles[0] + "s");
             }
             else

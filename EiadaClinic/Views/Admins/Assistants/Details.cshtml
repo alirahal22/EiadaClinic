@@ -1,24 +1,103 @@
 ﻿@model EiadaClinic.Models.Assistant
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Assistant Details";
 }
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title">Assistant Details</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="EditAssistant" method="get">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="User.UserName" class="bmd-label-floating"></label>
+                                <input asp-for="User.UserName" class="form-control" disabled>
+                                <span asp-validation-for="User.UserName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="bmd-label-floating">Doctor</label>
+                                <input asp-for="Doctor.User.UserName" class="form-control" disabled>
+                                <span asp-validation-for="Doctor.User.UserName" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="User.FirstName" class="bmd-label-floating"></label>
+                                <input asp-for="User.FirstName" class="form-control" disabled>
+                                <span asp-validation-for="User.FirstName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="User.MiddleName" class="bmd-label-floating"></label>
+                                <input asp-for="User.MiddleName" class="form-control" disabled>
+                                <span asp-validation-for="User.MiddleName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="User.LastName" class="bmd-label-floating"></label>
+                                <input asp-for="User.LastName" class="form-control" disabled>
+                                <span asp-validation-for="User.LastName" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
 
-<h2>Details</h2>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="User.PhoneNumber" class="bmd-label-floating"></label>
+                                <input asp-for="User.PhoneNumber" class="form-control" disabled>
+                                <span asp-validation-for="User.PhoneNumber" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="User.Gender" class="bmd-label-floating"></label>
+                                <input asp-for="User.Gender" class="form-control" disabled>
+                                <span asp-validation-for="User.Gender" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="User.Birthday" class="bmd-label-floating"></label>
+                                <input asp-for="User.Birthday" class="form-control" disabled>
+                                <span asp-validation-for="User.Birthday" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
 
-<div>
-    <h4>Assistant</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Doctor)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Doctor.Id)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="EditAssistant" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Assistants">Back to List</a>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="User.Email" class="bmd-label-floating"></label>
+                                <input asp-for="User.Email" class="form-control" disabled>
+                                <span asp-validation-for="User.Email" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="User.Address" class="bmd-label-floating"></label>
+                                <input asp-for="User.Address" class="form-control" disabled>
+                                <span asp-validation-for="User.Address" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <button asp-action="EditAssistant" asp-route-id="@Model.Id" class="btn col-md-2 btn-primary pull-right">Edit</button>
+                </form>
+                <form method="post">
+                    <button asp-action="DeleteAssistant" asp-route-id="@Model.Id" class="btn col-md-2 btn-danger pull-right">Delete</button>
+                </form>
+            </div>
+        </div>
+        <a asp-action="Assistants">Back to List</a>
+    </div>
 </div>

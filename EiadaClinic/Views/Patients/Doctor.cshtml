@@ -1,0 +1,71 @@
+﻿@model IEnumerable<EiadaClinic.Models.Consultation>
+
+@{
+    ViewData["Title"] = "Consultation";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title ">Consultations</h4>
+                <p class="card-category"> </p>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class=" text-primary">
+                        <th>
+                            Type
+                        </th>
+                        <th>
+                            Date
+                        </th>
+
+                        <th>
+                            Symptoms
+                        </th>
+                        <th>
+                            Diagnosis
+                        </th>
+                        <th>
+                            Treatment
+                        </th>
+                        <th>
+                            Fee
+                        </th>
+                        <th></th>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Type)
+                                    </td>
+                                    <td>
+                                        @item.Date.ToString()
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Symptoms)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Diagnosis)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Treatment)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Fee)
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+ </div>
